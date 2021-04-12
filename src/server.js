@@ -5,12 +5,12 @@ const promFormatter = require('./prom-formatter');
 
 const app = new Koa();
 
+let testResults = '';
+
 const routes = {
   metrics: async ctx => {
-    console.log('/metrics');
-    let testResults;
     let test = new SpeedTest();
-    await test.run()
+    test.run()
       .then(v => {
         testResults = promFormatter.format(v);
         console.log('speedtest: ', {download: v.speeds.download, upload: v.speeds.upload, ping: v.server.ping});
@@ -18,9 +18,9 @@ const routes = {
       .catch(e => {
         console.log('e', e);
       });
+
     ctx.type = 'text/plain; version=0.0.4';
     ctx.body = testResults;
-
   }
 };
 
