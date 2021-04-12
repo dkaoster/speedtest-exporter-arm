@@ -1,5 +1,5 @@
-FROM node:9-alpine@sha256:de0fc4272136f43c366f68681743b5717e2e7db7646b20c714005274cd638204
-MAINTAINER "Stefan Walther"
+FROM node:lts-alpine
+MAINTAINER "Daniel Kao"
 
 ARG PORT=9696
 

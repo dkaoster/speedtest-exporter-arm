@@ -1,7 +1,7 @@
 {
-  "name": "speedtest-exporter",
+  "name": "speedtest-exporter-arm",
   "version": "0.0.1",
-  "description": "Prometheus exporter for speedtest-net.",
+  "description": "Prometheus exporter for speedtest-net on arm devices such as pine64 and raspberry pi.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

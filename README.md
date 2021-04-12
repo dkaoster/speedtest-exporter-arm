@@ -1,6 +1,4 @@
-# speedtest-exporter
+# speedtest-exporter-arm
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/stefanwalther/speedtest-exporter.svg)](https://greenkeeper.io/)
-
-> Prometheus exporter for speedtest-net.
+> Prometheus exporter for speedtest-net on arm devices such as pine64 and raspberry pi.
 

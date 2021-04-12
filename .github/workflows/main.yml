@@ -1,0 +1,43 @@
+name: speedtest-exporter-arm
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: dkaoster/speedtest-exporter-arm
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_TARGET_PLATFORM: linux/arm/v7
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Set up Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
+      - name: Prepare
+        if: success()
+        id: prepare
+        run: |
+          echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
+          echo ::set-output name=docker_image::${DOCKER_IMAGE}
+          echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+      - name: Login
+        if: success()
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+      - name: Build
+        if: success()
+        run: |
+          docker buildx build \
+            --platform ${{ steps.prepare.outputs.docker_platform }} \
+            --tag ${{ steps.prepare.outputs.docker_image }}:$(git rev-parse --short "$GITHUB_SHA") \
+            --tag ${{ steps.prepare.outputs.docker_image }}:latest \
+            --file ./Dockerfile \
+            --output type=image,push=true .
