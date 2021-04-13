@@ -16,10 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          version: latest
+        uses: docker/setup-buildx-action@v1
 
       - name: Prepare
         if: success()
@@ -28,10 +29,12 @@ jobs:
           echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
           echo ::set-output name=docker_image::${DOCKER_IMAGE}
           echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+
       - name: Login
         if: success()
         run: |
           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+
       - name: Build
         if: success()
         run: |
@@ -41,3 +44,15 @@ jobs:
             --tag ${{ steps.prepare.outputs.docker_image }}:latest \
             --file ./Dockerfile \
             --output type=image,push=true .
+
+      - name: push README to Dockerhub
+        if: success()
+        uses: christian-korneck/update-container-description-action@v1
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+        with:
+          destination_container_repo: ${{ steps.prepare.outputs.docker_image }}
+          provider: dockerhub
+          short_description: 'Prometheus exporter for speedtest-net on arm devices such as pine64 and raspberry pi.'
+          readme_file: 'README.md'

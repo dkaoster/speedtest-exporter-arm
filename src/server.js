@@ -3,23 +3,28 @@ const _ = require('koa-route');
 const SpeedTest = require('./speed-test');
 const promFormatter = require('./prom-formatter');
 
+const TEST_TIMEOUT = process.env.TEST_TIMEOUT || 60;
+
 const app = new Koa();
 
 let testResults = '';
+let lastRun;
 
 const routes = {
   metrics: async ctx => {
-    try {
+    // Run a new speedtest only if we have passed our timeout threshold
+    if (!lastRun || ((lastRun + TEST_TIMEOUT) < Math.floor(new Date().getTime() / 1000))) {
       let test = new SpeedTest();
       test.run()
         .then(v => {
           testResults = promFormatter.format(v);
           console.log('speedtest: ', {download: v.speeds.download, upload: v.speeds.upload, ping: v.server.ping});
+
+          // Update lastRun time
+          lastRun = Math.floor(new Date().getTime() / 1000);
         })
-        .catch(e => {
-          console.log('e', e);
-        });
-    } catch (e) {}
+        .catch(e => console.log('e', e));
+    }
 
     ctx.type = 'text/plain; version=0.0.4';
     ctx.body = testResults;

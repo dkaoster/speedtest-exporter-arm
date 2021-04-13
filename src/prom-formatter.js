@@ -15,6 +15,4 @@ function format(results) {
   return output;
 }
 
-module.exports = {
-  format
-};
+module.exports = {format};
