@@ -9,15 +9,17 @@ let testResults = '';
 
 const routes = {
   metrics: async ctx => {
-    let test = new SpeedTest();
-    test.run()
-      .then(v => {
-        testResults = promFormatter.format(v);
-        console.log('speedtest: ', {download: v.speeds.download, upload: v.speeds.upload, ping: v.server.ping});
-      })
-      .catch(e => {
-        console.log('e', e);
-      });
+    try {
+      let test = new SpeedTest();
+      test.run()
+        .then(v => {
+          testResults = promFormatter.format(v);
+          console.log('speedtest: ', {download: v.speeds.download, upload: v.speeds.upload, ping: v.server.ping});
+        })
+        .catch(e => {
+          console.log('e', e);
+        });
+    } catch (e) {}
 
     ctx.type = 'text/plain; version=0.0.4';
     ctx.body = testResults;
