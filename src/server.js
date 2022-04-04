@@ -3,7 +3,7 @@ const _ = require('koa-route');
 const speedTest = require('./speed-test');
 const promFormatter = require('./prom-formatter');
 
-const TEST_TIMEOUT = process.env.TEST_TIMEOUT || 120;
+const TEST_TIMEOUT = parseInt(process.env.TEST_TIMEOUT) || 120;
 
 const app = new Koa();
 
