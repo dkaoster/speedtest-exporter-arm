@@ -11,6 +11,8 @@ WORKDIR $HOME
 
 COPY . /home
 
+RUN apt-get update || : && apt-get install python -y
+
 RUN npm install --quiet
 
 EXPOSE $PORT
