@@ -34,9 +34,8 @@
   },
   "dependencies": {
     "convert-hrtime": "^2.0.0",
-    "event-to-promise": "^0.8.0",
     "koa": "^2.3.0",
     "koa-route": "^3.2.0",
-    "speedtest-net": "^1.6.2"
+    "speedtest-net": "^2.2.0"
   }
 }
