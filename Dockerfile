@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:latest
 MAINTAINER "Daniel Kao"
 
 ARG PORT=9696
